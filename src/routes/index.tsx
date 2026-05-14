@@ -66,7 +66,27 @@ function Home() {
               Join Game
             </Link>
           </div>
+          <form
+            onSubmit={goSpectate}
+            className="mt-6 flex justify-center gap-2"
+          >
+            <input
+              value={spectateCode}
+              onChange={(e) =>
+                setSpectateCode(e.target.value.toUpperCase())
+              }
+              maxLength={6}
+              placeholder="CODE"
+              className="rounded-md border bg-background px-3 py-2 uppercase tracking-widest font-mono w-32 text-center"
+            />
 
+            <button
+              type="submit"
+              className="rounded-md bg-card border px-4 py-2 font-semibold hover:bg-accent"
+            >
+              Watch
+            </button>
+          </form>
           <div className="mt-10 text-muted-foreground text-sm flex flex-col items-center gap-2">
             <span>Scroll to learn more</span>
             <div className="animate-bounce">↓</div>
@@ -182,7 +202,7 @@ function Home() {
               to="/how-to-use"
               className="text-primary text-sm underline"
             >
-              Learn how it works →
+              Learn how to use it →
             </Link>
           </div>
 
