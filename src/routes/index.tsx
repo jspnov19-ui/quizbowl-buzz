@@ -38,7 +38,7 @@ function Home() {
           The fastest way to run a quizbowl match. Buzz in, score teams, and manage rosters in real time.
         </p>
 
-        <div className="mt-10 grid sm:grid-cols-2 gap-4">
+        <div className="mt-10 grid sm:grid-cols-3 gap-4">
           <Link
             to="/create"
             className="group rounded-2xl bg-primary text-primary-foreground p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
@@ -53,6 +53,15 @@ function Home() {
             <div className="text-2xl font-semibold text-foreground">Join a Game</div>
             <div className="mt-1 text-muted-foreground text-sm">Enter a room code to play</div>
           </Link>
+          <Link
+  to="/how-to-use"
+  className="group rounded-2xl bg-card border-2 border-border p-8 shadow-sm hover:shadow-md hover:border-primary transition-all hover:-translate-y-0.5"
+>
+  <div className="text-2xl font-semibold text-foreground">How To Use</div>
+  <div className="mt-1 text-muted-foreground text-sm">
+    Learn how to host, join, and run matches
+  </div>
+</Link>
         </div>
 
         <form
