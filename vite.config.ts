@@ -1,15 +1,30 @@
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-config";
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
+import { defineConfig } from "vite";
+import tsConfigPaths from "vite-tsconfig-paths";
 
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-// @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
-export default defineConfig({
-  // Vercel deploys TanStack Start through Nitro. The Lovable helper's Cloudflare
-  // build plugin is correct for Lovable hosting, but it produces dist/server on
-  // Vercel, which leaves the deployment without Vercel route output.
-  cloudflare: process.env.VERCEL === "1" ? false : undefined,
-  tanstackStart: {
-    server: { entry: "server" },
-  },
-  plugins: process.env.VERCEL === "1" ? [nitro({ preset: "vercel" })] : [],
-});
+// Vercel deploys TanStack Start through Nitro; Lovable hosting uses the
+// preconfigured Cloudflare build path from @lovable.dev/vite-tanstack-config.
+export default process.env.VERCEL === "1"
+  ? defineConfig({
+      plugins: [
+        tailwindcss(),
+        tsConfigPaths({ projects: ["./tsconfig.json"] }),
+        tanstackStart({ server: { entry: "server" } }),
+        nitro({ preset: "vercel" }),
+        viteReact(),
+      ],
+      resolve: {
+        alias: { "@": new URL("./src", import.meta.url).pathname },
+        dedupe: ["react", "react-dom", "@tanstack/react-query", "@tanstack/query-core"],
+      },
+    })
+  : defineLovableConfig({
+      tanstackStart: {
+        server: { entry: "server" },
+      },
+    });
