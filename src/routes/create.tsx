@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { createGame } from "@/lib/game";
 
 export const Route = createFileRoute("/create")({
-  head: () => ({ meta: [{ title: "Create Game — BuzzBowl" }] }),
+  head: () => ({ meta: [{ title: "Quibbol Buzz | Create Game" }] }),
   component: CreatePage,
 });
 
