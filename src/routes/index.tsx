@@ -6,9 +6,17 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Quibbol Buzz | Home" },
-      { name: "description", content: "Run live quizbowl matches with in app scoring and substitution." },
-      { property: "og:title", content: "Quizbowl Buzzer App" },
-      { property: "og:description", content: "Run live quizbowl matches with real-time buzzing, team scoring, and bonus rounds." },
+      {
+        name: "description",
+        content:
+          "Run live quizbowl matches with in app scoring and real-time buzzing.",
+      },
+      { property: "og:title", content: "Quibbol Buzz" },
+      {
+        property: "og:description",
+        content:
+          "Live quizbowl buzzer system with scoring, spectating, and match control.",
+      },
     ],
   }),
   component: Home,
@@ -26,63 +34,69 @@ function Home() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-background to-accent">
-      <div className="w-full max-w-2xl text-center">
+    <main className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-background to-accent">
+      <div className="w-full max-w-xl text-center">
+        {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-          <Zap className="w-4 h-4" /> Live quizbowl scoring
+          <Zap className="w-4 h-4" />
+          Live quizbowl buzzer system
         </div>
-        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-foreground">
+
+        {/* Title */}
+        <h1 className="text-6xl font-bold tracking-tight text-foreground">
           Quibbol Buzz
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-md mx-auto">
-          The fastest way to run a quizbowl match. Buzz in, score teams, and manage rosters in real time.
+
+        {/* Subtitle */}
+        <p className="mt-5 text-lg text-muted-foreground">
+          A fast, real-time quizbowl platform for buzzing, scoring, and spectating live matches.
         </p>
 
-        <div className="mt-10 grid sm:grid-cols-3 gap-4">
+        {/* Main actions */}
+        <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             to="/create"
-            className="group rounded-2xl bg-primary text-primary-foreground p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
+            className="rounded-xl bg-primary text-primary-foreground px-6 py-3 font-semibold hover:opacity-90 transition"
           >
-            <div className="text-2xl font-semibold">Create a Game</div>
-            <div className="mt-1 text-primary-foreground/80 text-sm">Host a match and invite players</div>
+            Create Game
           </Link>
+
           <Link
             to="/join"
-            className="group rounded-2xl bg-card border-2 border-border p-8 shadow-sm hover:shadow-md hover:border-primary transition-all hover:-translate-y-0.5"
+            className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
           >
-            <div className="text-2xl font-semibold text-foreground">Join a Game</div>
-            <div className="mt-1 text-muted-foreground text-sm">Enter a room code to play</div>
+            Join Game
           </Link>
+
           <Link
-  to="/how-to-use"
-  className="group rounded-2xl bg-card border-2 border-border p-8 shadow-sm hover:shadow-md hover:border-primary transition-all hover:-translate-y-0.5"
->
-  <div className="text-2xl font-semibold text-foreground">How To Use</div>
-  <div className="mt-1 text-muted-foreground text-sm">
-    Learn how to host, join, and run matches
-  </div>
-</Link>
+            to="/how-to-use"
+            className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
+          >
+            How to Use
+          </Link>
         </div>
 
+        {/* Spectate */}
         <form
           onSubmit={goSpectate}
-          className="mt-6 flex items-center justify-center gap-2 text-sm"
+          className="mt-8 flex items-center justify-center gap-2 text-sm"
         >
           <Eye className="w-4 h-4 text-muted-foreground" />
-          <label htmlFor="spectate" className="text-muted-foreground">
-            Spectate a game:
-          </label>
+
           <input
             id="spectate"
             value={spectateCode}
-            onChange={(e) => setSpectateCode(e.target.value.toUpperCase())}
+            onChange={(e) =>
+              setSpectateCode(e.target.value.toUpperCase())
+            }
             maxLength={6}
-            placeholder="CODE"
-            className="rounded-md border bg-background px-2 py-1 uppercase tracking-widest font-mono w-28 text-center outline-none focus:ring-2 focus:ring-primary"
+            placeholder="SPECTATE CODE"
+            className="rounded-md border bg-background px-3 py-2 uppercase tracking-widest font-mono w-40 text-center outline-none focus:ring-2 focus:ring-primary"
           />
+
           <button
             type="submit"
-            className="rounded-md bg-card border px-3 py-1 font-semibold hover:bg-accent"
+            className="rounded-md bg-card border px-3 py-2 font-semibold hover:bg-accent transition"
           >
             Watch
           </button>
