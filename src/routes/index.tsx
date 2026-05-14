@@ -39,7 +39,7 @@ function Home() {
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            Real-time quizbowl infrastructure
+            Live quizbowl matches
           </div>
 
           <h1 className="text-6xl font-bold tracking-tight">
@@ -157,10 +157,10 @@ function Home() {
           </div>
 
           <Link
-            to="/create"
+            to="/how-to-use"
             className="inline-block mt-10 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-semibold"
           >
-            Start a Match
+            More Information
           </Link>
         </div>
       </section>
@@ -197,14 +197,7 @@ function Home() {
             </button>
           </form>
 
-          <div className="mt-8">
-            <Link
-              to="/how-to-use"
-              className="text-primary text-sm underline"
-            >
-              Learn how to use it →
-            </Link>
-          </div>
+
 
         </div>
       </section>
