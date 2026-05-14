@@ -48,7 +48,7 @@ function Home() {
   }
 
   return (
-    <main className="min-h-screen text-foreground bg-gradient-to-br from-background to-accent relative">
+    <main className="min-h-screen text-foreground bg-gradient-to-b from-background via-accent/40 to-black relative">
 
       {/* 🌑 scroll-based dark overlay */}
       <div
@@ -156,28 +156,28 @@ function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-28 px-6 border-t border-border/40 relative z-10">
+      <section className="py-28 px-6 border-t border-white/10 relative z-10 text-white">
         <div className="max-w-3xl mx-auto text-center">
 
           <h2 className="text-4xl font-bold mb-10">How it works</h2>
 
           <div className="space-y-6 text-left">
 
-            <div className="p-5 rounded-xl border bg-card">
+            <div className="p-5 rounded-xl border bg-card text-card-foreground">
               <p className="font-semibold">1. Create a match</p>
               <p className="text-sm text-muted-foreground">
                 Host generates a room code for players.
               </p>
             </div>
 
-            <div className="p-5 rounded-xl border bg-card">
+            <div className="p-5 rounded-xl border bg-card text-card-foreground">
               <p className="font-semibold">2. Players join</p>
               <p className="text-sm text-muted-foreground">
                 Join instantly using the shared code.
               </p>
             </div>
 
-            <div className="p-5 rounded-xl border bg-card">
+            <div className="p-5 rounded-xl border bg-card text-card-foreground">
               <p className="font-semibold">3. Buzz & compete</p>
               <p className="text-sm text-muted-foreground">
                 First buzz locks answer and updates scores live.
@@ -196,12 +196,12 @@ function Home() {
       </section>
 
       {/* SPECTATE */}
-      <section className="py-28 px-6 border-t border-border/40 relative z-10">
+      <section className="py-28 px-6 border-t border-white/10 relative z-10 text-white">
         <div className="max-w-xl mx-auto text-center">
 
           <h2 className="text-3xl font-bold">Spectate live matches</h2>
 
-          <p className="mt-3 text-muted-foreground">
+          <p className="mt-3 text-white/70">
             Enter a room code to watch gameplay in real time.
           </p>
 
@@ -216,12 +216,12 @@ function Home() {
               }
               maxLength={6}
               placeholder="CODE"
-              className="rounded-md border bg-background px-3 py-2 uppercase tracking-widest font-mono w-32 text-center"
+              className="rounded-md border bg-background text-foreground px-3 py-2 uppercase tracking-widest font-mono w-32 text-center"
             />
 
             <button
               type="submit"
-              className="rounded-md bg-card border px-4 py-2 font-semibold hover:bg-accent"
+              className="rounded-md bg-card text-card-foreground border px-4 py-2 font-semibold hover:bg-accent"
             >
               Watch
             </button>
