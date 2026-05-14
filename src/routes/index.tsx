@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, Zap, Users, Trophy } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -20,6 +20,26 @@ function Home() {
   const navigate = useNavigate();
   const [spectateCode, setSpectateCode] = useState("");
 
+  // 🌑 scroll darkness state
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    function handleScroll() {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+
+      setScrollProgress(Math.min(progress, 1));
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   function goSpectate(e: React.FormEvent) {
     e.preventDefault();
     const code = spectateCode.trim().toUpperCase();
@@ -28,13 +48,21 @@ function Home() {
   }
 
   return (
-    <main className="min-h-screen text-foreground bg-gradient-to-br from-background to-accent">
+    <main className="min-h-screen text-foreground bg-gradient-to-br from-background to-accent relative">
 
-      {/* subtle background grid feel */}
+      {/* 🌑 scroll-based dark overlay */}
+      <div
+        className="pointer-events-none fixed inset-0 transition-colors duration-300 z-0"
+        style={{
+          backgroundColor: `rgba(0, 0, 0, ${scrollProgress * 0.35})`,
+        }}
+      />
+
+      {/* subtle background grid */}
       <div className="pointer-events-none fixed inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:48px_48px]" />
 
       {/* HERO */}
-      <section className="min-h-screen flex items-center justify-center px-6 text-center">
+      <section className="min-h-screen flex items-center justify-center px-6 text-center relative z-10">
         <div className="max-w-2xl relative">
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
@@ -66,6 +94,7 @@ function Home() {
               Join Game
             </Link>
           </div>
+
           <form
             onSubmit={goSpectate}
             className="mt-6 flex justify-center gap-2"
@@ -87,6 +116,7 @@ function Home() {
               Watch
             </button>
           </form>
+
           <div className="mt-10 text-muted-foreground text-sm flex flex-col items-center gap-2">
             <span>Scroll to learn more</span>
             <div className="animate-bounce">↓</div>
@@ -95,7 +125,7 @@ function Home() {
       </section>
 
       {/* TRUST / VALUE STRIP */}
-      <section className="py-20 px-6 border-t border-border/40">
+      <section className="py-20 px-6 border-t border-border/40 relative z-10">
         <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-6 text-center">
 
           <div>
@@ -126,7 +156,7 @@ function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-28 px-6 border-t border-border/40">
+      <section className="py-28 px-6 border-t border-border/40 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
 
           <h2 className="text-4xl font-bold mb-10">How it works</h2>
@@ -166,7 +196,7 @@ function Home() {
       </section>
 
       {/* SPECTATE */}
-      <section className="py-28 px-6 border-t border-border/40">
+      <section className="py-28 px-6 border-t border-border/40 relative z-10">
         <div className="max-w-xl mx-auto text-center">
 
           <h2 className="text-3xl font-bold">Spectate live matches</h2>
@@ -196,8 +226,6 @@ function Home() {
               Watch
             </button>
           </form>
-
-
 
         </div>
       </section>
