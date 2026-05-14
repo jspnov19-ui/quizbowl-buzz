@@ -4,7 +4,7 @@ import { playerStatLine, teamPPB, type Player, type QuestionEvent, type Team } f
 import { Zap } from "lucide-react";
 
 export const Route = createFileRoute("/watch/$code")({
-  head: () => ({ meta: [{ title: "Spectate — BuzzBowl" }] }),
+  head: () => ({ meta: [{ title: "Quibbol Buzz | Spectate" }] }),
   component: WatchPage,
 });
 
