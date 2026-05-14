@@ -29,7 +29,7 @@ function HowToUse() {
         <div className="text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            Quibbol Buzz Guide
+            Quibbol Buzz
           </div>
 
           <h1 className="text-5xl font-bold tracking-tight text-foreground">
@@ -37,8 +37,7 @@ function HowToUse() {
           </h1>
 
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to run a live quizbowl match with buzzing,
-            scoring, substitutions, and spectators.
+            How to run a quizbowl match using quibbol buzz, with all the features.
           </p>
         </div>
 
@@ -51,9 +50,9 @@ function HowToUse() {
 
             <ol className="space-y-3 text-muted-foreground">
               <li>1. Click “Create a Game” on the home page.</li>
-              <li>2. Enter team names and match settings.</li>
-              <li>3. Share the room code with players.</li>
-              <li>4. Start the match and manage scoring live.</li>
+              <li>2. Enter team names and share the room code with players.</li>
+              <li>3. Start the match and give points to players from the prompts.</li>
+              <li>4. Click next question to go to the next question.</li>
             </ol>
           </div>
 
@@ -66,7 +65,7 @@ function HowToUse() {
             <ol className="space-y-3 text-muted-foreground">
               <li>1. Click “Join a Game”.</li>
               <li>2. Enter the room code from the moderator.</li>
-              <li>3. Choose your team and player name.</li>
+              <li>3. Moderator can switch your team and substitute players in and out.</li>
               <li>4. Use the buzzer during gameplay.</li>
             </ol>
           </div>
@@ -78,10 +77,10 @@ function HowToUse() {
             </div>
 
             <ul className="space-y-3 text-muted-foreground">
-              <li>• Players can buzz once per question.</li>
               <li>• The first buzz locks out other players.</li>
               <li>• Moderators can reset buzzing between questions.</li>
               <li>• Real-time updates sync instantly across devices.</li>
+              <li>• Players and moderators can enable audio feedback for buzzes.</li>
             </ul>
           </div>
 
@@ -95,7 +94,7 @@ function HowToUse() {
               <li>• Enter a room code in the spectate box.</li>
               <li>• Watch scores and buzzes live.</li>
               <li>• Spectators cannot interact with gameplay.</li>
-              <li>• Great for coaches, judges, and audiences.</li>
+              <li>• Great for coaches, staffers, and audiences.</li>
             </ul>
           </div>
         </div>
