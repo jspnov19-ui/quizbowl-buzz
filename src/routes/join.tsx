@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { findGameByCode } from "@/lib/game";
 
 export const Route = createFileRoute("/join")({
-  head: () => ({ meta: [{ title: "Join Game — BuzzBowl" }] }),
+  head: () => ({ meta: [{ title: "Quibbol Buzz | Join Game" }] }),
   component: JoinPage,
 });
 
