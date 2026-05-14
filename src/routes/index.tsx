@@ -5,7 +5,7 @@ import { Eye, Zap } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Quibbol Bz" },
+      { title: "Quibbol Buzz | Home" },
       { name: "description", content: "Run live quizbowl matches with in app scoring and substitution." },
       { property: "og:title", content: "Quizbowl Buzzer App" },
       { property: "og:description", content: "Run live quizbowl matches with real-time buzzing, team scoring, and bonus rounds." },
