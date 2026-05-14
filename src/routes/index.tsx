@@ -5,7 +5,7 @@ import { Eye, Zap, Users, Trophy } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Quibbol Buzz | Live Quizbowl System" },
+      { title: "Quibbol Buzz | Home" },
       {
         name: "description",
         content:
@@ -48,13 +48,13 @@ function Home() {
   }
 
   return (
-    <main className="min-h-screen text-foreground bg-gradient-to-b from-background via-accent/40 to-black relative">
+    <main className="min-h-screen text-foreground bg-gradient-to-b from-[#f4fff6] via-[#d7f5df] to-[#0b1f14] relative">
 
-      {/* 🌑 scroll-based dark overlay */}
+      {/* 🌑 scroll-based green dark overlay */}
       <div
         className="pointer-events-none fixed inset-0 transition-colors duration-300 z-0"
         style={{
-          backgroundColor: `rgba(0, 0, 0, ${scrollProgress * 0.35})`,
+          backgroundColor: `rgba(0, 20, 10, ${scrollProgress * 0.28})`,
         }}
       />
 
