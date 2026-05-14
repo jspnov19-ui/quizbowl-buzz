@@ -7,7 +7,7 @@ import { playBuzz, useMuted } from "@/lib/sound";
 import { Volume2, VolumeX, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/play/$code")({
-  head: () => ({ meta: [{ title: "Play — BuzzBowl" }] }),
+  head: () => ({ meta: [{ title: "Quibbol Buzz | Play" }] }),
   component: PlayPage,
 });
 
