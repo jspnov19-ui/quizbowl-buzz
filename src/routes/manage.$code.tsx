@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/manage/$code")({
-  head: () => ({ meta: [{ title: "Manage Game — BuzzBowl" }] }),
+  head: () => ({ meta: [{ title: "Quibbol Buzz | Manage Game" }] }),
   component: ManagePage,
 });
 
