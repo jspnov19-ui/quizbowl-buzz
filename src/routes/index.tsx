@@ -1,15 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Eye, Zap, Users, Trophy, ArrowDown } from "lucide-react";
+import { Eye, Zap, Users, Trophy } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Quibbol Buzz | Home" },
+      { title: "Quibbol Buzz | Live Quizbowl System" },
       {
         name: "description",
         content:
-          "Run live quizbowl matches with real-time buzzing and scoring.",
+          "Real-time quizbowl buzzer system with live scoring and multiplayer syncing.",
       },
     ],
   }),
@@ -28,14 +28,18 @@ function Home() {
   }
 
   return (
-    <main className="bg-gradient-to-br from-background to-accent text-foreground">
+    <main className="min-h-screen text-foreground bg-gradient-to-br from-background to-accent">
 
-      {/* HERO SECTION */}
+      {/* subtle background grid feel */}
+      <div className="pointer-events-none fixed inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:48px_48px]" />
+
+      {/* HERO */}
       <section className="min-h-screen flex items-center justify-center px-6 text-center">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl relative">
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            Live quizbowl buzzer system
+            Real-time quizbowl infrastructure
           </div>
 
           <h1 className="text-6xl font-bold tracking-tight">
@@ -43,96 +47,118 @@ function Home() {
           </h1>
 
           <p className="mt-5 text-lg text-muted-foreground">
-            A real-time quizbowl platform for buzzing, scoring, and managing live matches.
+            A fast, synchronized buzzer system for live quizbowl matches with
+            instant scoring and spectator support.
           </p>
 
-          <div className="mt-10 flex justify-center">
-            <ArrowDown className="animate-bounce text-muted-foreground" />
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURES SECTION */}
-      <section className="min-h-screen flex items-center px-6">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6 text-center">
-
-          <div className="p-6 rounded-2xl border bg-card">
-            <Zap className="mx-auto w-8 h-8 text-primary mb-3" />
-            <h3 className="text-xl font-semibold">Fast Buzzing</h3>
-            <p className="text-muted-foreground mt-2">
-              Real-time buzzer system with instant lockout.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl border bg-card">
-            <Trophy className="mx-auto w-8 h-8 text-primary mb-3" />
-            <h3 className="text-xl font-semibold">Live Scoring</h3>
-            <p className="text-muted-foreground mt-2">
-              Track points and match progress instantly.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl border bg-card">
-            <Users className="mx-auto w-8 h-8 text-primary mb-3" />
-            <h3 className="text-xl font-semibold">Multiplayer</h3>
-            <p className="text-muted-foreground mt-2">
-              Play across devices with synced gameplay.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* HOW IT WORKS SECTION */}
-      <section className="min-h-screen flex items-center px-6">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl font-bold mb-10 text-center">
-            How it works
-          </h2>
-
-          <div className="space-y-6">
-            <div className="p-6 rounded-xl border bg-card">
-              <h3 className="font-semibold text-lg">1. Create a game</h3>
-              <p className="text-muted-foreground">
-                Host a match and generate a room code.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-xl border bg-card">
-              <h3 className="font-semibold text-lg">2. Players join</h3>
-              <p className="text-muted-foreground">
-                Players enter the room code to connect.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-xl border bg-card">
-              <h3 className="font-semibold text-lg">3. Buzz & score</h3>
-              <p className="text-muted-foreground">
-                First buzz locks in answers and updates scores live.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center mt-10">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               to="/create"
-              className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-xl font-semibold"
+              className="rounded-xl bg-primary text-primary-foreground px-6 py-3 font-semibold hover:opacity-90 transition"
             >
-              Start a Game
+              Create Game
             </Link>
+
+            <Link
+              to="/join"
+              className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
+            >
+              Join Game
+            </Link>
+          </div>
+
+          <div className="mt-10 text-muted-foreground text-sm flex flex-col items-center gap-2">
+            <span>Scroll to learn more</span>
+            <div className="animate-bounce">↓</div>
           </div>
         </div>
       </section>
 
-      {/* SPECTATE SECTION */}
-      <section className="min-h-screen flex items-center justify-center px-6 text-center">
-        <div className="max-w-md">
-          <h2 className="text-3xl font-bold mb-4">Spectate a match</h2>
-          <p className="text-muted-foreground mb-6">
-            Enter a room code to watch live gameplay.
+      {/* TRUST / VALUE STRIP */}
+      <section className="py-20 px-6 border-t border-border/40">
+        <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-6 text-center">
+
+          <div>
+            <Zap className="mx-auto w-6 h-6 text-primary mb-2" />
+            <p className="font-semibold">Instant buzzing</p>
+            <p className="text-sm text-muted-foreground">
+              No delay, real-time lockout
+            </p>
+          </div>
+
+          <div>
+            <Trophy className="mx-auto w-6 h-6 text-primary mb-2" />
+            <p className="font-semibold">Live scoring</p>
+            <p className="text-sm text-muted-foreground">
+              Updates across all devices instantly
+            </p>
+          </div>
+
+          <div>
+            <Users className="mx-auto w-6 h-6 text-primary mb-2" />
+            <p className="font-semibold">Multiplayer sync</p>
+            <p className="text-sm text-muted-foreground">
+              Works across phones, tablets, laptops
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="py-28 px-6 border-t border-border/40">
+        <div className="max-w-3xl mx-auto text-center">
+
+          <h2 className="text-4xl font-bold mb-10">How it works</h2>
+
+          <div className="space-y-6 text-left">
+
+            <div className="p-5 rounded-xl border bg-card">
+              <p className="font-semibold">1. Create a match</p>
+              <p className="text-sm text-muted-foreground">
+                Host generates a room code for players.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-xl border bg-card">
+              <p className="font-semibold">2. Players join</p>
+              <p className="text-sm text-muted-foreground">
+                Join instantly using the shared code.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-xl border bg-card">
+              <p className="font-semibold">3. Buzz & compete</p>
+              <p className="text-sm text-muted-foreground">
+                First buzz locks answer and updates scores live.
+              </p>
+            </div>
+
+          </div>
+
+          <Link
+            to="/create"
+            className="inline-block mt-10 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-semibold"
+          >
+            Start a Match
+          </Link>
+        </div>
+      </section>
+
+      {/* SPECTATE */}
+      <section className="py-28 px-6 border-t border-border/40">
+        <div className="max-w-xl mx-auto text-center">
+
+          <h2 className="text-3xl font-bold">Spectate live matches</h2>
+
+          <p className="mt-3 text-muted-foreground">
+            Enter a room code to watch gameplay in real time.
           </p>
 
-          <form onSubmit={goSpectate} className="flex gap-2 justify-center">
+          <form
+            onSubmit={goSpectate}
+            className="mt-6 flex justify-center gap-2"
+          >
             <input
               value={spectateCode}
               onChange={(e) =>
@@ -151,14 +177,15 @@ function Home() {
             </button>
           </form>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <Link
-              to="/join"
-              className="text-primary underline text-sm"
+              to="/how-to-use"
+              className="text-primary text-sm underline"
             >
-              Or join a game instead →
+              Learn how it works →
             </Link>
           </div>
+
         </div>
       </section>
 
