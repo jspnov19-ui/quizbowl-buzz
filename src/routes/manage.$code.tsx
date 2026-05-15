@@ -616,10 +616,14 @@ function EditEventDialog({
   players: Player[];
   teams: Team[];
   onClose: () => void;
-  onSave: (updates: { points?: number; player_id?: string | null }) => void;
+  onSave: (updates: { points?: number; player_id?: string | null; bonus_points?: number | null }) => void;
 }) {
   const [points, setPoints] = useState<number>(event.points);
   const [playerId, setPlayerId] = useState<string | null>(event.player_id);
+  const [bonusEnabled, setBonusEnabled] = useState<boolean>(
+    event.bonus_points !== null && event.bonus_points !== undefined,
+  );
+  const [bonusPoints, setBonusPoints] = useState<number>(event.bonus_points ?? 0);
   const team = teams.find((t) => t.id === event.team_id);
   const teamPlayers = players.filter((p) => p.team_id === event.team_id);
 
@@ -634,7 +638,7 @@ function EditEventDialog({
         </div>
 
         <div className="mt-4">
-          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Points</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Tossup points</div>
           <div className="grid grid-cols-4 gap-2">
             {[-5, 0, 10, 15].map((p) => (
               <button
@@ -670,8 +674,32 @@ function EditEventDialog({
           </select>
         </div>
 
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Bonus points</div>
+            <label className="text-xs flex items-center gap-1.5 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={bonusEnabled}
+                onChange={(e) => setBonusEnabled(e.target.checked)}
+              />
+              awarded
+            </label>
+          </div>
+          <input
+            type="number"
+            value={bonusEnabled ? bonusPoints : ""}
+            disabled={!bonusEnabled}
+            onChange={(e) => setBonusPoints(Number(e.target.value) || 0)}
+            min={0}
+            step={5}
+            placeholder="No bonus"
+            className="w-full rounded-lg border bg-background px-3 py-2 disabled:opacity-50"
+          />
+        </div>
+
         <p className="text-xs text-muted-foreground mt-3">
-          Editing only updates this row in history & stats. Team scores are not changed.
+          Saving recalculates team scores from the full question history.
         </p>
 
         <div className="mt-5 flex justify-end gap-2">
@@ -679,7 +707,13 @@ function EditEventDialog({
             Cancel
           </button>
           <button
-            onClick={() => onSave({ points, player_id: playerId })}
+            onClick={() =>
+              onSave({
+                points,
+                player_id: playerId,
+                bonus_points: bonusEnabled ? bonusPoints : null,
+              })
+            }
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90"
           >
             Save
