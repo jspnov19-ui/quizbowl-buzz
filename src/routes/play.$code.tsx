@@ -126,6 +126,11 @@ function PlayPage() {
               <span className="text-xl">{buzzedPlayer?.name}</span>
               <span className="text-sm font-normal opacity-80">buzzed in</span>
             </div>
+          ) : roundEnded ? (
+            <div className="flex flex-col items-center">
+              <span className="text-xl">Round ended</span>
+              <span className="text-sm font-normal opacity-80">waiting for next question</span>
+            </div>
           ) : me?.is_substitute ? (
             "On bench"
           ) : (
