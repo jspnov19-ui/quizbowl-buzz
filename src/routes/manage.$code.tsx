@@ -596,7 +596,7 @@ function HistoryPanel({
               </tbody>
             </table>
             <p className="text-xs text-muted-foreground px-2 mt-2">
-              Deleting or editing a question only affects the history & stats — team scores stay as they are.
+              Edits and deletions automatically recalculate team scores from the question history.
             </p>
           </div>
         )}
