@@ -6,6 +6,8 @@ export type Game = {
   current_question: number;
   buzzed_player_id: string | null;
   buzz_locked: boolean;
+  status: string;
+  round_ended: boolean;
 };
 export type Team = { id: string; game_id: string; name: string; side: number; score: number };
 export type Player = {
