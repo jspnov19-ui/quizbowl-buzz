@@ -212,14 +212,45 @@ function ManagePage() {
         <div className="bg-card border rounded-2xl p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Current question</div>
-            <div className="text-3xl font-bold">#{game.current_question}</div>
+            <div className="text-3xl font-bold flex items-center gap-2">
+              #{game.current_question}
+              {game.round_ended && (
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                  round ended
+                </span>
+              )}
+            </div>
           </div>
-          <button
-            onClick={nextQuestion}
-            className="bg-primary text-primary-foreground rounded-lg px-5 py-2.5 font-semibold flex items-center gap-2 hover:opacity-90"
-          >
-            Next question <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={endRound}
+              disabled={game.round_ended}
+              className="rounded-lg px-4 py-2.5 font-semibold flex items-center gap-2 border bg-card hover:bg-accent disabled:opacity-50"
+              title="Disable buzzing for this question"
+            >
+              <Hand className="w-4 h-4" /> End round
+            </button>
+            <button
+              onClick={downloadReport}
+              className="rounded-lg px-4 py-2.5 font-semibold flex items-center gap-2 border bg-card hover:bg-accent"
+              title="Download match report PDF (moderator only)"
+            >
+              <FileText className="w-4 h-4" /> Report PDF
+            </button>
+            <button
+              onClick={() => setConfirmClose(true)}
+              className="rounded-lg px-4 py-2.5 font-semibold flex items-center gap-2 border border-destructive text-destructive hover:bg-destructive/10"
+              title="Permanently close this match"
+            >
+              <DoorClosed className="w-4 h-4" /> Close room
+            </button>
+            <button
+              onClick={nextQuestion}
+              className="bg-primary text-primary-foreground rounded-lg px-5 py-2.5 font-semibold flex items-center gap-2 hover:opacity-90"
+            >
+              Next question <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </section>
 
