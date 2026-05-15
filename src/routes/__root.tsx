@@ -72,16 +72,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Quibbol Buzz" },
+      { title: "Quibbol Buzz22" },
       { name: "description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for creating and joining competitive trivia games." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Quibbol Buzz" },
-      { property: "og:description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for online quizbowl games." },
+      { property: "og:title", content: "Quibbol Buzz22" },
+      { property: "og:description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for creating and joining competitive trivia games." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Quibbol Buzz" },
-      { name: "twitter:description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for online quizbowl matches and practice." },
+      { name: "twitter:title", content: "Quibbol Buzz22" },
+      { name: "twitter:description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for creating and joining competitive trivia games." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/00fd02e0-b65a-429e-b747-8323aa732dcd/id-preview-40eef714--466eac49-b84a-4f67-8975-158d145e7ff5.lovable.app-1778552425250.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/00fd02e0-b65a-429e-b747-8323aa732dcd/id-preview-40eef714--466eac49-b84a-4f67-8975-158d145e7ff5.lovable.app-1778552425250.png" },
     ],
@@ -103,6 +103,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('bb_theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.style.colorScheme='light';}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
         {children}

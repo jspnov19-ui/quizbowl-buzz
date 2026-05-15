@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, Zap, Users, Trophy } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,18 +49,19 @@ function Home() {
   }
 
   return (
-    <main className="min-h-screen text-foreground bg-gradient-to-b from-[#f4fff6] via-[#d7f5df] to-[#0b1f14] relative">
+    <main className="min-h-screen text-foreground bg-gradient-to-b from-background via-accent/40 to-background relative">
+      <div className="fixed top-4 right-4 z-20"><ThemeToggle /></div>
 
-      {/* 🌑 scroll-based green dark overlay */}
+      {/* scroll-based darkening overlay (uses foreground token so it adapts to theme) */}
       <div
         className="pointer-events-none fixed inset-0 transition-colors duration-300 z-0"
         style={{
-          backgroundColor: `rgba(0, 20, 10, ${scrollProgress * 0.28})`,
+          backgroundColor: `color-mix(in oklab, var(--color-foreground) ${scrollProgress * 12}%, transparent)`,
         }}
       />
 
       {/* subtle background grid */}
-      <div className="pointer-events-none fixed inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:48px_48px]" />
+      <div className="pointer-events-none fixed inset-0 opacity-[0.04] bg-[linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] bg-[size:48px_48px]" />
 
       {/* HERO */}
       <section className="min-h-screen flex items-center justify-center px-6 text-center relative z-10">
@@ -92,6 +94,13 @@ function Home() {
               className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
             >
               Join Game
+            </Link>
+
+            <Link
+              to="/tournament"
+              className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
+            >
+              Tournament Pairings
             </Link>
           </div>
 
@@ -156,7 +165,7 @@ function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-28 px-6 border-t border-white/10 relative z-10 text-white">
+      <section className="py-28 px-6 border-t border-border/40 relative z-10 text-foreground">
         <div className="max-w-3xl mx-auto text-center">
 
           <h2 className="text-4xl font-bold mb-10">How it works</h2>
@@ -196,12 +205,12 @@ function Home() {
       </section>
 
       {/* SPECTATE */}
-      <section className="py-28 px-6 border-t border-white/10 relative z-10 text-white">
+      <section className="py-28 px-6 border-t border-border/40 relative z-10 text-foreground">
         <div className="max-w-xl mx-auto text-center">
 
           <h2 className="text-3xl font-bold">Spectate live matches</h2>
 
-          <p className="mt-3 text-white/70">
+          <p className="mt-3 text-muted-foreground">
             Enter a room code to watch gameplay in real time.
           </p>
 

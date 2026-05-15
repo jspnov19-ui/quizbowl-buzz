@@ -16,34 +16,52 @@ export type Database = {
     Tables: {
       games: {
         Row: {
+          bonuses_enabled: boolean
           buzz_locked: boolean
           buzzed_player_id: string | null
           code: string
           created_at: string
           current_question: number
           id: string
+          mode: string
           round_ended: boolean
           status: string
+          timer_remaining_seconds: number | null
+          timer_started_at: string | null
+          timer_status: string
+          timer_total_seconds: number | null
         }
         Insert: {
+          bonuses_enabled?: boolean
           buzz_locked?: boolean
           buzzed_player_id?: string | null
           code: string
           created_at?: string
           current_question?: number
           id?: string
+          mode?: string
           round_ended?: boolean
           status?: string
+          timer_remaining_seconds?: number | null
+          timer_started_at?: string | null
+          timer_status?: string
+          timer_total_seconds?: number | null
         }
         Update: {
+          bonuses_enabled?: boolean
           buzz_locked?: boolean
           buzzed_player_id?: string | null
           code?: string
           created_at?: string
           current_question?: number
           id?: string
+          mode?: string
           round_ended?: boolean
           status?: string
+          timer_remaining_seconds?: number | null
+          timer_started_at?: string | null
+          timer_status?: string
+          timer_total_seconds?: number | null
         }
         Relationships: []
       }
@@ -100,6 +118,8 @@ export type Database = {
           id: string
           player_id: string | null
           points: number
+          protest_note: string | null
+          protested: boolean
           question_number: number
           team_id: string | null
         }
@@ -110,6 +130,8 @@ export type Database = {
           id?: string
           player_id?: string | null
           points?: number
+          protest_note?: string | null
+          protested?: boolean
           question_number: number
           team_id?: string | null
         }
@@ -120,6 +142,38 @@ export type Database = {
           id?: string
           player_id?: string | null
           points?: number
+          protest_note?: string | null
+          protested?: boolean
+          question_number?: number
+          team_id?: string | null
+        }
+        Relationships: []
+      }
+      substitution_events: {
+        Row: {
+          action: string
+          created_at: string
+          game_id: string
+          id: string
+          player_id: string
+          question_number: number
+          team_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          game_id: string
+          id?: string
+          player_id: string
+          question_number: number
+          team_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          game_id?: string
+          id?: string
+          player_id?: string
           question_number?: number
           team_id?: string | null
         }

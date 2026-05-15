@@ -1,5 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export type GameMode = "teams" | "ffa";
+export type TimerStatus = "idle" | "running" | "paused";
+
 export type Game = {
   id: string;
   code: string;
@@ -8,6 +11,12 @@ export type Game = {
   buzz_locked: boolean;
   status: string;
   round_ended: boolean;
+  mode: GameMode;
+  bonuses_enabled: boolean;
+  timer_total_seconds: number | null;
+  timer_status: TimerStatus;
+  timer_started_at: string | null;
+  timer_remaining_seconds: number | null;
 };
 export type Team = { id: string; game_id: string; name: string; side: number; score: number };
 export type Player = {
@@ -26,6 +35,17 @@ export type QuestionEvent = {
   team_id: string | null;
   points: number;
   bonus_points: number | null;
+  protested: boolean;
+  protest_note: string | null;
+  created_at: string;
+};
+export type SubstitutionEvent = {
+  id: string;
+  game_id: string;
+  question_number: number;
+  player_id: string;
+  team_id: string | null;
+  action: "in" | "out";
   created_at: string;
 };
 
@@ -36,14 +56,17 @@ export function genCode() {
   return s;
 }
 
-export async function createGame() {
+export async function createGame(opts?: { mode?: GameMode; bonusesEnabled?: boolean }) {
   const code = genCode();
+  const mode: GameMode = opts?.mode ?? "teams";
+  const bonuses_enabled = opts?.bonusesEnabled ?? true;
   const { data: game, error } = await supabase
     .from("games")
-    .insert({ code })
+    .insert({ code, mode, bonuses_enabled })
     .select()
     .single();
   if (error) throw error;
+  // Always create the two team rows so team-mode flows work; FFA simply ignores them.
   await supabase.from("teams").insert([
     { game_id: game.id, name: "Team 1", side: 1 },
     { game_id: game.id, name: "Team 2", side: 2 },
@@ -90,7 +113,7 @@ export function computeTotals(events: QuestionEvent[]) {
   for (const e of events) {
     const pts = (e.points ?? 0) + (e.bonus_points ?? 0);
     if (e.team_id) teamTotals[e.team_id] = (teamTotals[e.team_id] ?? 0) + pts;
-    if (e.player_id) playerTotals[e.player_id] = (playerTotals[e.player_id] ?? 0) + (e.points ?? 0);
+    if (e.player_id) playerTotals[e.player_id] = (playerTotals[e.player_id] ?? 0) + (e.points ?? 0) + (e.bonus_points ?? 0);
   }
   return { teamTotals, playerTotals };
 }
@@ -117,4 +140,23 @@ export async function recalcScores(gameId: string) {
         : supabase.from("players").update({ score: next }).eq("id", p.id);
     }),
   ]);
+}
+
+// ----- Timer helpers -----
+
+export function getTimerRemaining(game: Pick<Game, "timer_status" | "timer_started_at" | "timer_remaining_seconds" | "timer_total_seconds">): number {
+  if (game.timer_status === "idle") return game.timer_total_seconds ?? 0;
+  if (game.timer_status === "paused") return game.timer_remaining_seconds ?? 0;
+  // running
+  const base = game.timer_remaining_seconds ?? game.timer_total_seconds ?? 0;
+  const startedAt = game.timer_started_at ? new Date(game.timer_started_at).getTime() : Date.now();
+  const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+  return Math.max(0, base - elapsed);
+}
+
+export function formatTime(totalSeconds: number): string {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${m}:${r.toString().padStart(2, "0")}`;
 }

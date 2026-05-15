@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TournamentRouteImport } from './routes/tournament'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as HowToUseRouteImport } from './routes/how-to-use'
 import { Route as CreateRouteImport } from './routes/create'
@@ -17,6 +18,11 @@ import { Route as WatchCodeRouteImport } from './routes/watch.$code'
 import { Route as PlayCodeRouteImport } from './routes/play.$code'
 import { Route as ManageCodeRouteImport } from './routes/manage.$code'
 
+const TournamentRoute = TournamentRouteImport.update({
+  id: '/tournament',
+  path: '/tournament',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JoinRoute = JoinRouteImport.update({
   id: '/join',
   path: '/join',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/create': typeof CreateRoute
   '/how-to-use': typeof HowToUseRoute
   '/join': typeof JoinRoute
+  '/tournament': typeof TournamentRoute
   '/manage/$code': typeof ManageCodeRoute
   '/play/$code': typeof PlayCodeRoute
   '/watch/$code': typeof WatchCodeRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/create': typeof CreateRoute
   '/how-to-use': typeof HowToUseRoute
   '/join': typeof JoinRoute
+  '/tournament': typeof TournamentRoute
   '/manage/$code': typeof ManageCodeRoute
   '/play/$code': typeof PlayCodeRoute
   '/watch/$code': typeof WatchCodeRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/create': typeof CreateRoute
   '/how-to-use': typeof HowToUseRoute
   '/join': typeof JoinRoute
+  '/tournament': typeof TournamentRoute
   '/manage/$code': typeof ManageCodeRoute
   '/play/$code': typeof PlayCodeRoute
   '/watch/$code': typeof WatchCodeRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/create'
     | '/how-to-use'
     | '/join'
+    | '/tournament'
     | '/manage/$code'
     | '/play/$code'
     | '/watch/$code'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/create'
     | '/how-to-use'
     | '/join'
+    | '/tournament'
     | '/manage/$code'
     | '/play/$code'
     | '/watch/$code'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/create'
     | '/how-to-use'
     | '/join'
+    | '/tournament'
     | '/manage/$code'
     | '/play/$code'
     | '/watch/$code'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   CreateRoute: typeof CreateRoute
   HowToUseRoute: typeof HowToUseRoute
   JoinRoute: typeof JoinRoute
+  TournamentRoute: typeof TournamentRoute
   ManageCodeRoute: typeof ManageCodeRoute
   PlayCodeRoute: typeof PlayCodeRoute
   WatchCodeRoute: typeof WatchCodeRoute
@@ -123,6 +136,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tournament': {
+      id: '/tournament'
+      path: '/tournament'
+      fullPath: '/tournament'
+      preLoaderRoute: typeof TournamentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/join': {
       id: '/join'
       path: '/join'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   CreateRoute: CreateRoute,
   HowToUseRoute: HowToUseRoute,
   JoinRoute: JoinRoute,
+  TournamentRoute: TournamentRoute,
   ManageCodeRoute: ManageCodeRoute,
   PlayCodeRoute: PlayCodeRoute,
   WatchCodeRoute: WatchCodeRoute,
