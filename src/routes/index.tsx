@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Real-time quizbowl buzzer system with live scoring and multiplayer syncing.",
+          "Real-time quizbowl buzzer system with live multiplayer scoring and tournament bracket generation.",
       },
     ],
   }),
@@ -77,8 +77,7 @@ function Home() {
           </h1>
 
           <p className="mt-5 text-lg text-muted-foreground">
-            A fast, synchronized buzzer system for live quizbowl matches with
-            instant scoring and spectator support.
+            A real-time quizbowl system featuring multiplayer buzzing, live scoring, tournament management, and spectator viewing.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
