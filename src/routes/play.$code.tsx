@@ -128,8 +128,8 @@ function PlayPage() {
             </div>
           ) : roundEnded ? (
             <div className="flex flex-col items-center">
-              <span className="text-xl">Round ended</span>
-              <span className="text-sm font-normal opacity-80">waiting for next question</span>
+              <span className="text-xl">The round has ended</span>
+              <span className="text-sm font-normal opacity-80"></span>
             </div>
           ) : me?.is_substitute ? (
             "On bench"
