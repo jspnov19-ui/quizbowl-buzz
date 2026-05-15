@@ -78,8 +78,6 @@ function ManagePage() {
 
   async function award(points: number) {
     if (!buzzed || !buzzedTeam || !game) return;
-    await supabase.from("players").update({ score: buzzed.score + points }).eq("id", buzzed.id);
-    await supabase.from("teams").update({ score: buzzedTeam.score + points }).eq("id", buzzedTeam.id);
 
     const { data: ev } = await supabase
       .from("question_events")
@@ -100,20 +98,18 @@ function ManagePage() {
     } else {
       await supabase.from("games").update({ buzzed_player_id: null, buzz_locked: false }).eq("id", game.id);
     }
+    await recalcScores(game.id);
   }
 
   async function applyBonus(points: number) {
     if (!bonusForTeam || !game) return;
-    const t = teams.find((x) => x.id === bonusForTeam);
-    if (t && points > 0) {
-      await supabase.from("teams").update({ score: t.score + points }).eq("id", t.id);
-    }
     if (pendingEventId) {
       await supabase.from("question_events").update({ bonus_points: points }).eq("id", pendingEventId);
     }
     setBonusForTeam(null);
     setPendingEventId(null);
     await supabase.from("games").update({ buzz_locked: false, buzzed_player_id: null }).eq("id", game.id);
+    await recalcScores(game.id);
   }
 
   async function nextQuestion() {
@@ -121,12 +117,34 @@ function ManagePage() {
     setPendingEventId(null);
     await supabase
       .from("games")
-      .update({ current_question: game!.current_question + 1, buzzed_player_id: null, buzz_locked: false })
+      .update({
+        current_question: game!.current_question + 1,
+        buzzed_player_id: null,
+        buzz_locked: false,
+        round_ended: false,
+      })
       .eq("id", game!.id);
   }
 
   async function clearBuzz() {
     await supabase.from("games").update({ buzzed_player_id: null, buzz_locked: false }).eq("id", game!.id);
+  }
+
+  async function endRound() {
+    if (!game) return;
+    setBonusForTeam(null);
+    setPendingEventId(null);
+    await supabase
+      .from("games")
+      .update({ round_ended: true, buzz_locked: true, buzzed_player_id: null })
+      .eq("id", game.id);
+  }
+
+  async function closeRoom() {
+    if (!game) return;
+    await supabase.from("games").update({ status: "closed", buzz_locked: true, buzzed_player_id: null }).eq("id", game.id);
+    setConfirmClose(false);
+    navigate({ to: "/" });
   }
 
   async function movePlayer(player: Player, toTeamId: string | null, asSub: boolean) {
@@ -140,12 +158,19 @@ function ManagePage() {
 
   async function deleteEvent(id: string) {
     await supabase.from("question_events").delete().eq("id", id);
+    if (game) await recalcScores(game.id);
   }
 
-  async function saveEditEvent(updates: { points?: number; player_id?: string | null }) {
+  async function saveEditEvent(updates: { points?: number; player_id?: string | null; bonus_points?: number | null }) {
     if (!editingEvent) return;
     await supabase.from("question_events").update(updates).eq("id", editingEvent.id);
     setEditingEvent(null);
+    if (game) await recalcScores(game.id);
+  }
+
+  function downloadReport() {
+    if (!game) return;
+    downloadMatchReport({ game, teams, players, events });
   }
 
   const showBonus = bonusForTeam !== null;
