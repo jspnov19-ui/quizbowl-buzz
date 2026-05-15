@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useGameState } from "@/hooks/use-game-state";
-import { playerStatLine, teamPPB, type Player, type QuestionEvent, type Team } from "@/lib/game";
+import { playerStatLine, recalcScores, teamPPB, type Player, type QuestionEvent, type Team } from "@/lib/game";
+import { downloadMatchReport } from "@/lib/match-report";
 import { playBuzz, useMuted } from "@/lib/sound";
 import {
   Copy,
@@ -18,6 +19,9 @@ import {
   Pencil,
   Eye,
   X,
+  Hand,
+  DoorClosed,
+  FileText,
 } from "lucide-react";
 
 export const Route = createFileRoute("/manage/$code")({
@@ -27,12 +31,14 @@ export const Route = createFileRoute("/manage/$code")({
 
 function ManagePage() {
   const { code } = Route.useParams();
+  const navigate = useNavigate();
   const { game, teams, players, events, loading, notFound } = useGameState(code);
   const [copied, setCopied] = useState(false);
   const [bonusForTeam, setBonusForTeam] = useState<string | null>(null);
   const [pendingEventId, setPendingEventId] = useState<string | null>(null);
   const [editingTeam, setEditingTeam] = useState<string | null>(null);
   const [editingEvent, setEditingEvent] = useState<QuestionEvent | null>(null);
+  const [confirmClose, setConfirmClose] = useState(false);
   const { muted, toggle: toggleMute } = useMuted();
 
   // Play sound when a new buzz happens
@@ -72,8 +78,6 @@ function ManagePage() {
 
   async function award(points: number) {
     if (!buzzed || !buzzedTeam || !game) return;
-    await supabase.from("players").update({ score: buzzed.score + points }).eq("id", buzzed.id);
-    await supabase.from("teams").update({ score: buzzedTeam.score + points }).eq("id", buzzedTeam.id);
 
     const { data: ev } = await supabase
       .from("question_events")
@@ -94,20 +98,18 @@ function ManagePage() {
     } else {
       await supabase.from("games").update({ buzzed_player_id: null, buzz_locked: false }).eq("id", game.id);
     }
+    await recalcScores(game.id);
   }
 
   async function applyBonus(points: number) {
     if (!bonusForTeam || !game) return;
-    const t = teams.find((x) => x.id === bonusForTeam);
-    if (t && points > 0) {
-      await supabase.from("teams").update({ score: t.score + points }).eq("id", t.id);
-    }
     if (pendingEventId) {
       await supabase.from("question_events").update({ bonus_points: points }).eq("id", pendingEventId);
     }
     setBonusForTeam(null);
     setPendingEventId(null);
     await supabase.from("games").update({ buzz_locked: false, buzzed_player_id: null }).eq("id", game.id);
+    await recalcScores(game.id);
   }
 
   async function nextQuestion() {
@@ -115,12 +117,34 @@ function ManagePage() {
     setPendingEventId(null);
     await supabase
       .from("games")
-      .update({ current_question: game!.current_question + 1, buzzed_player_id: null, buzz_locked: false })
+      .update({
+        current_question: game!.current_question + 1,
+        buzzed_player_id: null,
+        buzz_locked: false,
+        round_ended: false,
+      })
       .eq("id", game!.id);
   }
 
   async function clearBuzz() {
     await supabase.from("games").update({ buzzed_player_id: null, buzz_locked: false }).eq("id", game!.id);
+  }
+
+  async function endRound() {
+    if (!game) return;
+    setBonusForTeam(null);
+    setPendingEventId(null);
+    await supabase
+      .from("games")
+      .update({ round_ended: true, buzz_locked: true, buzzed_player_id: null })
+      .eq("id", game.id);
+  }
+
+  async function closeRoom() {
+    if (!game) return;
+    await supabase.from("games").update({ status: "closed", buzz_locked: true, buzzed_player_id: null }).eq("id", game.id);
+    setConfirmClose(false);
+    navigate({ to: "/" });
   }
 
   async function movePlayer(player: Player, toTeamId: string | null, asSub: boolean) {
@@ -134,12 +158,19 @@ function ManagePage() {
 
   async function deleteEvent(id: string) {
     await supabase.from("question_events").delete().eq("id", id);
+    if (game) await recalcScores(game.id);
   }
 
-  async function saveEditEvent(updates: { points?: number; player_id?: string | null }) {
+  async function saveEditEvent(updates: { points?: number; player_id?: string | null; bonus_points?: number | null }) {
     if (!editingEvent) return;
     await supabase.from("question_events").update(updates).eq("id", editingEvent.id);
     setEditingEvent(null);
+    if (game) await recalcScores(game.id);
+  }
+
+  function downloadReport() {
+    if (!game) return;
+    downloadMatchReport({ game, teams, players, events });
   }
 
   const showBonus = bonusForTeam !== null;
@@ -181,14 +212,45 @@ function ManagePage() {
         <div className="bg-card border rounded-2xl p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Current question</div>
-            <div className="text-3xl font-bold">#{game.current_question}</div>
+            <div className="text-3xl font-bold flex items-center gap-2">
+              #{game.current_question}
+              {game.round_ended && (
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                  round ended
+                </span>
+              )}
+            </div>
           </div>
-          <button
-            onClick={nextQuestion}
-            className="bg-primary text-primary-foreground rounded-lg px-5 py-2.5 font-semibold flex items-center gap-2 hover:opacity-90"
-          >
-            Next question <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={endRound}
+              disabled={game.round_ended}
+              className="rounded-lg px-4 py-2.5 font-semibold flex items-center gap-2 border bg-card hover:bg-accent disabled:opacity-50"
+              title="Disable buzzing for this question"
+            >
+              <Hand className="w-4 h-4" /> End round
+            </button>
+            <button
+              onClick={downloadReport}
+              className="rounded-lg px-4 py-2.5 font-semibold flex items-center gap-2 border bg-card hover:bg-accent"
+              title="Download match report PDF (moderator only)"
+            >
+              <FileText className="w-4 h-4" /> Report PDF
+            </button>
+            <button
+              onClick={() => setConfirmClose(true)}
+              className="rounded-lg px-4 py-2.5 font-semibold flex items-center gap-2 border border-destructive text-destructive hover:bg-destructive/10"
+              title="Permanently close this match"
+            >
+              <DoorClosed className="w-4 h-4" /> Close room
+            </button>
+            <button
+              onClick={nextQuestion}
+              className="bg-primary text-primary-foreground rounded-lg px-5 py-2.5 font-semibold flex items-center gap-2 hover:opacity-90"
+            >
+              Next question <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -335,6 +397,28 @@ function ManagePage() {
           onClose={() => setEditingEvent(null)}
           onSave={saveEditEvent}
         />
+      )}
+
+      {confirmClose && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4" onClick={() => setConfirmClose(false)}>
+          <div className="bg-card border rounded-2xl p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold">Close room?</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Are you sure you want to close this room? This action cannot be undone.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button onClick={() => setConfirmClose(false)} className="px-4 py-2 rounded-lg border hover:bg-accent">
+                Cancel
+              </button>
+              <button
+                onClick={closeRoom}
+                className="px-4 py-2 rounded-lg bg-destructive text-destructive-foreground font-semibold hover:opacity-90"
+              >
+                Confirm close room
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="pb-10" />
@@ -501,7 +585,7 @@ function HistoryPanel({
                         <button
                           onClick={() => onDelete(e.id)}
                           className="p-1.5 rounded hover:bg-destructive/10 text-destructive"
-                          title="Delete from history (does not change score)"
+                          title="Delete from history (recalculates team scores)"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -512,7 +596,7 @@ function HistoryPanel({
               </tbody>
             </table>
             <p className="text-xs text-muted-foreground px-2 mt-2">
-              Deleting or editing a question only affects the history & stats — team scores stay as they are.
+              Edits and deletions automatically recalculate team scores from the question history.
             </p>
           </div>
         )}
@@ -532,10 +616,14 @@ function EditEventDialog({
   players: Player[];
   teams: Team[];
   onClose: () => void;
-  onSave: (updates: { points?: number; player_id?: string | null }) => void;
+  onSave: (updates: { points?: number; player_id?: string | null; bonus_points?: number | null }) => void;
 }) {
   const [points, setPoints] = useState<number>(event.points);
   const [playerId, setPlayerId] = useState<string | null>(event.player_id);
+  const [bonusEnabled, setBonusEnabled] = useState<boolean>(
+    event.bonus_points !== null && event.bonus_points !== undefined,
+  );
+  const [bonusPoints, setBonusPoints] = useState<number>(event.bonus_points ?? 0);
   const team = teams.find((t) => t.id === event.team_id);
   const teamPlayers = players.filter((p) => p.team_id === event.team_id);
 
@@ -550,7 +638,7 @@ function EditEventDialog({
         </div>
 
         <div className="mt-4">
-          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Points</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Tossup points</div>
           <div className="grid grid-cols-4 gap-2">
             {[-5, 0, 10, 15].map((p) => (
               <button
@@ -586,8 +674,32 @@ function EditEventDialog({
           </select>
         </div>
 
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Bonus points</div>
+            <label className="text-xs flex items-center gap-1.5 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={bonusEnabled}
+                onChange={(e) => setBonusEnabled(e.target.checked)}
+              />
+              awarded
+            </label>
+          </div>
+          <input
+            type="number"
+            value={bonusEnabled ? bonusPoints : ""}
+            disabled={!bonusEnabled}
+            onChange={(e) => setBonusPoints(Number(e.target.value) || 0)}
+            min={0}
+            step={5}
+            placeholder="No bonus"
+            className="w-full rounded-lg border bg-background px-3 py-2 disabled:opacity-50"
+          />
+        </div>
+
         <p className="text-xs text-muted-foreground mt-3">
-          Editing only updates this row in history & stats. Team scores are not changed.
+          Saving recalculates team scores from the full question history.
         </p>
 
         <div className="mt-5 flex justify-end gap-2">
@@ -595,7 +707,13 @@ function EditEventDialog({
             Cancel
           </button>
           <button
-            onClick={() => onSave({ points, player_id: playerId })}
+            onClick={() =>
+              onSave({
+                points,
+                player_id: playerId,
+                bonus_points: bonusEnabled ? bonusPoints : null,
+              })
+            }
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90"
           >
             Save

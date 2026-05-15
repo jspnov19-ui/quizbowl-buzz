@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as JoinRouteImport } from './routes/join'
+import { Route as HowToUseRouteImport } from './routes/how-to-use'
 import { Route as CreateRouteImport } from './routes/create'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WatchCodeRouteImport } from './routes/watch.$code'
@@ -19,6 +20,11 @@ import { Route as ManageCodeRouteImport } from './routes/manage.$code'
 const JoinRoute = JoinRouteImport.update({
   id: '/join',
   path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowToUseRoute = HowToUseRouteImport.update({
+  id: '/how-to-use',
+  path: '/how-to-use',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CreateRoute = CreateRouteImport.update({
@@ -50,6 +56,7 @@ const ManageCodeRoute = ManageCodeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create': typeof CreateRoute
+  '/how-to-use': typeof HowToUseRoute
   '/join': typeof JoinRoute
   '/manage/$code': typeof ManageCodeRoute
   '/play/$code': typeof PlayCodeRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create': typeof CreateRoute
+  '/how-to-use': typeof HowToUseRoute
   '/join': typeof JoinRoute
   '/manage/$code': typeof ManageCodeRoute
   '/play/$code': typeof PlayCodeRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/create': typeof CreateRoute
+  '/how-to-use': typeof HowToUseRoute
   '/join': typeof JoinRoute
   '/manage/$code': typeof ManageCodeRoute
   '/play/$code': typeof PlayCodeRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/create'
+    | '/how-to-use'
     | '/join'
     | '/manage/$code'
     | '/play/$code'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/create'
+    | '/how-to-use'
     | '/join'
     | '/manage/$code'
     | '/play/$code'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/create'
+    | '/how-to-use'
     | '/join'
     | '/manage/$code'
     | '/play/$code'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateRoute: typeof CreateRoute
+  HowToUseRoute: typeof HowToUseRoute
   JoinRoute: typeof JoinRoute
   ManageCodeRoute: typeof ManageCodeRoute
   PlayCodeRoute: typeof PlayCodeRoute
@@ -115,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/join'
       fullPath: '/join'
       preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-to-use': {
+      id: '/how-to-use'
+      path: '/how-to-use'
+      fullPath: '/how-to-use'
+      preLoaderRoute: typeof HowToUseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/create': {
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateRoute: CreateRoute,
+  HowToUseRoute: HowToUseRoute,
   JoinRoute: JoinRoute,
   ManageCodeRoute: ManageCodeRoute,
   PlayCodeRoute: PlayCodeRoute,
