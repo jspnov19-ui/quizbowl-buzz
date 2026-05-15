@@ -22,6 +22,8 @@ export type Database = {
           created_at: string
           current_question: number
           id: string
+          round_ended: boolean
+          status: string
         }
         Insert: {
           buzz_locked?: boolean
@@ -30,6 +32,8 @@ export type Database = {
           created_at?: string
           current_question?: number
           id?: string
+          round_ended?: boolean
+          status?: string
         }
         Update: {
           buzz_locked?: boolean
@@ -38,6 +42,8 @@ export type Database = {
           created_at?: string
           current_question?: number
           id?: string
+          round_ended?: boolean
+          status?: string
         }
         Relationships: []
       }
