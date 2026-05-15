@@ -72,18 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Quibbol Buzz22" },
+      { title: "Quibbol Buzz" },
       { name: "description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for creating and joining competitive trivia games." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Quibbol Buzz22" },
+      { property: "og:title", content: "Quibbol Buzz" },
       { property: "og:description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for creating and joining competitive trivia games." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Quibbol Buzz22" },
+      { name: "twitter:title", content: "Quibbol Buzz" },
       { name: "twitter:description", content: "Quibbol Buzz is a real-time quizbowl buzzer application for creating and joining competitive trivia games." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/00fd02e0-b65a-429e-b747-8323aa732dcd/id-preview-40eef714--466eac49-b84a-4f67-8975-158d145e7ff5.lovable.app-1778552425250.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/00fd02e0-b65a-429e-b747-8323aa732dcd/id-preview-40eef714--466eac49-b84a-4f67-8975-158d145e7ff5.lovable.app-1778552425250.png" },
+      { property: "og:image", content: "https://raw.githubusercontent.com/jspnov19-ui/quizbowl-buzz/refs/heads/main/src/routes/quibbol-buzz-metadata-image.png" },
+      { name: "twitter:image", content: "https://raw.githubusercontent.com/jspnov19-ui/quizbowl-buzz/refs/heads/main/src/routes/quibbol-buzz-metadata-image.png" },
     ],
     links: [
       {
