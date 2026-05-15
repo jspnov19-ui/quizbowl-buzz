@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useGameState } from "@/hooks/use-game-state";
-import { playerStatLine, teamPPB, type Player, type QuestionEvent, type Team } from "@/lib/game";
+import { playerStatLine, recalcScores, teamPPB, type Player, type QuestionEvent, type Team } from "@/lib/game";
+import { downloadMatchReport } from "@/lib/match-report";
 import { playBuzz, useMuted } from "@/lib/sound";
 import {
   Copy,
@@ -18,6 +19,9 @@ import {
   Pencil,
   Eye,
   X,
+  Hand,
+  DoorClosed,
+  FileText,
 } from "lucide-react";
 
 export const Route = createFileRoute("/manage/$code")({
