@@ -585,7 +585,7 @@ function HistoryPanel({
                         <button
                           onClick={() => onDelete(e.id)}
                           className="p-1.5 rounded hover:bg-destructive/10 text-destructive"
-                          title="Delete from history (does not change score)"
+                          title="Delete from history (recalculates team scores)"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
