@@ -35,12 +35,17 @@ function PlayPage() {
     lastBuzzRef.current = id;
   }, [game?.buzzed_player_id, muted]);
 
-  if (notFound) {
+  if (notFound || (game && game.status === "closed")) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold">Game not found</h1>
-          <Link to="/" className="mt-2 inline-block text-primary">← Home</Link>
+      <main className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center max-w-sm">
+          <h1 className="text-3xl font-bold">Room closed</h1>
+          <p className="mt-2 text-muted-foreground">
+            The moderator has ended this match. Thanks for playing!
+          </p>
+          <Link to="/" className="mt-6 inline-block rounded-lg bg-primary text-primary-foreground px-5 py-2.5 font-semibold">
+            Back to home
+          </Link>
         </div>
       </main>
     );
@@ -55,7 +60,7 @@ function PlayPage() {
 
   async function buzz() {
     if (!game || !me) return;
-    if (game.buzz_locked || game.buzzed_player_id) return;
+    if (game.buzz_locked || game.buzzed_player_id || game.round_ended) return;
     if (me.is_substitute) return;
     await supabase
       .from("games")
@@ -67,7 +72,8 @@ function PlayPage() {
   const buzzedPlayer = players.find((p) => p.id === game.buzzed_player_id);
   const someoneBuzzed = !!game.buzzed_player_id;
   const meBuzzed = game.buzzed_player_id === me?.id;
-  const canBuzz = me && !me.is_substitute && !someoneBuzzed;
+  const roundEnded = game.round_ended;
+  const canBuzz = me && !me.is_substitute && !someoneBuzzed && !roundEnded;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-background to-accent">
