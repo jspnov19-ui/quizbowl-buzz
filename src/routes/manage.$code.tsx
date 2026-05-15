@@ -399,6 +399,28 @@ function ManagePage() {
         />
       )}
 
+      {confirmClose && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4" onClick={() => setConfirmClose(false)}>
+          <div className="bg-card border rounded-2xl p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold">Close room?</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Are you sure you want to close this room? This action cannot be undone.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button onClick={() => setConfirmClose(false)} className="px-4 py-2 rounded-lg border hover:bg-accent">
+                Cancel
+              </button>
+              <button
+                onClick={closeRoom}
+                className="px-4 py-2 rounded-lg bg-destructive text-destructive-foreground font-semibold hover:opacity-90"
+              >
+                Confirm close room
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="pb-10" />
     </main>
   );
