@@ -31,12 +31,14 @@ export const Route = createFileRoute("/manage/$code")({
 
 function ManagePage() {
   const { code } = Route.useParams();
+  const navigate = useNavigate();
   const { game, teams, players, events, loading, notFound } = useGameState(code);
   const [copied, setCopied] = useState(false);
   const [bonusForTeam, setBonusForTeam] = useState<string | null>(null);
   const [pendingEventId, setPendingEventId] = useState<string | null>(null);
   const [editingTeam, setEditingTeam] = useState<string | null>(null);
   const [editingEvent, setEditingEvent] = useState<QuestionEvent | null>(null);
+  const [confirmClose, setConfirmClose] = useState(false);
   const { muted, toggle: toggleMute } = useMuted();
 
   // Play sound when a new buzz happens
