@@ -72,19 +72,40 @@ function PlayPage() {
     };
   }, [buzz]);
 
-  if (notFound || (game && game.status === "closed")) {
+  if (notFound) {
     return (
       <main className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-sm">
-          <h1 className="text-3xl font-bold">Room closed</h1>
-          <p className="mt-2 text-muted-foreground">
-            The moderator has ended this match. Thanks for playing!
-          </p>
+          <h1 className="text-3xl font-bold">Room not found</h1>
           <Link to="/" className="mt-6 inline-block rounded-lg bg-primary text-primary-foreground px-5 py-2.5 font-semibold">
             Back to home
           </Link>
         </div>
       </main>
+    );
+  }
+  if (game && game.status === "closed") {
+    if (game.mode === "ffa") {
+      return (
+        <main className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center max-w-sm">
+            <h1 className="text-3xl font-bold">Match ended</h1>
+            <p className="mt-2 text-muted-foreground">Thanks for playing!</p>
+            <Link to="/" className="mt-6 inline-block rounded-lg bg-primary text-primary-foreground px-5 py-2.5 font-semibold">
+              Back to home
+            </Link>
+          </div>
+        </main>
+      );
+    }
+    return (
+      <FinalResults
+        code={game.code}
+        teams={teams}
+        players={players}
+        events={events}
+        subEvents={subEvents}
+      />
     );
   }
   if (loading || !game || !playerId) {
