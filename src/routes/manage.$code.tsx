@@ -188,6 +188,10 @@ function ManagePage() {
   async function closeRoom() {
     if (!game) return;
     await supabase.from("games").update({ status: "closed", buzz_locked: true, buzzed_player_id: null }).eq("id", game.id);
+    try {
+      const { syncTournamentGameFromRoom } = await import("@/lib/tournament");
+      await syncTournamentGameFromRoom(game.id);
+    } catch (e) { console.error(e); }
     setConfirmClose(false);
     navigate({ to: "/" });
   }
