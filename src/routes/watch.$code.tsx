@@ -4,6 +4,7 @@ import { playerStatLine, teamPPB, type Player, type QuestionEvent, type Team } f
 import { Zap } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MatchTimerDisplay } from "@/components/match-timer";
+import { FinalResults } from "@/components/final-results";
 
 export const Route = createFileRoute("/watch/$code")({
   head: () => ({ meta: [{ title: "Quibbol Buzz | Spectate" }] }),
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/watch/$code")({
 
 function WatchPage() {
   const { code } = Route.useParams();
-  const { game, teams, players, events, loading, notFound } = useGameState(code);
+  const { game, teams, players, events, subEvents, loading, notFound } = useGameState(code);
 
   if (notFound) {
     return (
@@ -26,6 +27,18 @@ function WatchPage() {
   }
   if (loading || !game) {
     return <main className="min-h-screen flex items-center justify-center text-muted-foreground">Loading…</main>;
+  }
+
+  if (game.status === "closed" && game.mode !== "ffa") {
+    return (
+      <FinalResults
+        code={game.code}
+        teams={teams}
+        players={players}
+        events={events}
+        subEvents={subEvents}
+      />
+    );
   }
 
   const isFFA = game.mode === "ffa";
