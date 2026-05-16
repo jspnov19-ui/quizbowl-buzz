@@ -8,6 +8,7 @@ import { Volume2, VolumeX, Zap } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SoundPicker } from "@/components/sound-picker";
 import { MatchTimerDisplay } from "@/components/match-timer";
+import { FinalResults } from "@/components/final-results";
 
 export const Route = createFileRoute("/play/$code")({
   head: () => ({ meta: [{ title: "Quibbol Buzz | Play" }] }),
