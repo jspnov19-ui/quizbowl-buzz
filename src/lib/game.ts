@@ -97,6 +97,48 @@ export function playerStatLine(events: QuestionEvent[], playerId: string) {
   return { p15, p10, n5 };
 }
 
+// Tossup-only points for a player (excludes bonus_points). Used for PP20TUH.
+export function playerTossupPoints(events: QuestionEvent[], playerId: string) {
+  let total = 0;
+  for (const e of events) {
+    if (e.player_id === playerId) total += e.points ?? 0;
+  }
+  return total;
+}
+
+// Tossups Heard by a player across a fixed number of tossups, taking
+// substitution events into account. Mirrors the logic in match-report.ts.
+export function playerTuh(
+  player: Player,
+  totalTossups: number,
+  subEvents: SubstitutionEvent[],
+): number {
+  if (totalTossups === 0) return 0;
+  const subs = subEvents
+    .filter((s) => s.player_id === player.id)
+    .slice()
+    .sort((a, b) => a.question_number - b.question_number || a.created_at.localeCompare(b.created_at));
+  let active = !player.is_substitute;
+  let heard = 0;
+  for (let q = 1; q <= totalTossups; q++) {
+    while (subs.length > 0 && subs[0].question_number <= q) {
+      const ev = subs.shift()!;
+      active = ev.action === "in";
+    }
+    if (active) heard++;
+  }
+  return heard;
+}
+
+export function pp20tuh(tossupPoints: number, tuh: number) {
+  if (tuh <= 0) return null;
+  return (tossupPoints / tuh) * 20;
+}
+
+export function totalTossupsAsked(events: QuestionEvent[]) {
+  return events.reduce((m, e) => Math.max(m, e.question_number ?? 0), 0);
+}
+
 export function teamPPB(events: QuestionEvent[], teamId: string) {
   const bonuses = events.filter(
     (e) => e.team_id === teamId && e.bonus_points !== null && e.bonus_points !== undefined,
