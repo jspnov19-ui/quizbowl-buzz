@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import type { Game, Player, QuestionEvent, SubstitutionEvent, Team } from "@/lib/game";
-import { playerStatLine, teamPPB } from "@/lib/game";
+import { playerStatLine, playerTossupPoints, teamPPB } from "@/lib/game";
 
 export function downloadMatchReport({
   game,
@@ -213,7 +213,8 @@ function renderTeams(
     const rowsP = sortedPlayers.map((p) => {
       const s = playerStatLine(events, p.id);
       const heard = computeTuh(p, totalTossups, subEvents);
-      const pp20 = heard > 0 ? ((p.score ?? 0) / heard) * 20 : 0;
+      const tossupPts = playerTossupPoints(events, p.id);
+      const pp20 = heard > 0 ? (tossupPts / heard) * 20 : 0;
       return [
         p.name + (p.is_substitute ? " (sub)" : ""),
         `${p.score ?? 0}`,
@@ -221,7 +222,7 @@ function renderTeams(
         `${s.p10}`,
         `${s.n5}`,
         `${heard}`,
-        heard > 0 ? pp20.toFixed(1) : "—",
+        heard > 0 ? pp20.toFixed(2) : "—",
       ];
     });
 

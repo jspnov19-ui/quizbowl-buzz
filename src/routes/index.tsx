@@ -96,10 +96,17 @@ function Home() {
             </Link>
 
             <Link
+              to="/tournaments"
+              className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
+            >
+              Tournament Hub
+            </Link>
+
+            <Link
               to="/tournament"
               className="rounded-xl bg-card border border-border px-6 py-3 font-semibold hover:bg-accent transition"
             >
-              Tournament Generator
+              Pairings Generator
             </Link>
           </div>
 
