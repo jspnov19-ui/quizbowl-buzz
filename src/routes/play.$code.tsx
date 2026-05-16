@@ -18,7 +18,7 @@ export const Route = createFileRoute("/play/$code")({
 function PlayPage() {
   const { code } = Route.useParams();
   const navigate = useNavigate();
-  const { game, teams, players, events, loading, notFound } = useGameState(code);
+  const { game, teams, players, events, subEvents, loading, notFound } = useGameState(code);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const { muted, toggle: toggleMute } = useMuted();
   const { choice: soundChoice } = useSoundChoice();
